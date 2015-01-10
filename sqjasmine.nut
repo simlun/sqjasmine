@@ -75,16 +75,42 @@ function it(title, spec) {
 
 
 class expect {
+  a = null
+  not = null
 
-  actualCondition = null
-
-  constructor(actual) {
-    actualCondition = actual
+  constructor(_a) {
+    a = _a
+    not = negatedExpect(_a)
   }
 
-  function toBe(expectedCondition) {
-    if (actualCondition != expectedCondition)
-      throw "FAIL: expected " + expectedCondition + " but actually was " + actualCondition
+  function toBe(b) {
+    if (!_shouldPass(a, b)) {
+      _fail(a, b)
+    }
+  }
+
+  function _fail(a, b) {
+    throw "FAIL: expected " + a + " to be " + b
+  }
+
+  function _shouldPass(a, b) {
+    return a == b
+  }
+}
+
+
+class negatedExpect extends expect {
+  constructor(_a) {
+    a = _a
+    not = null // Not implemented, double negations are silly.
+  }
+
+  function _fail(a, b) {
+    throw "FAIL: expected " + a + " not to be " + b
+  }
+
+  function _shouldPass(a, b) {
+    return a != b
   }
 }
 
@@ -118,7 +144,7 @@ describe("A suite", function() {
 })
 
 
-expectException("FAIL: expected false but actually was true", function() {
+expectException("FAIL: expected true to be false", function() {
   describe("A failing suite", function() {
     it("contains spec with a failing expectation", function() {
       expect(true).toBe(false)
@@ -134,5 +160,26 @@ describe("A suite is just a function", function() {
     a = true
 
     expect(a).toBe(true)
+  })
+})
+
+
+describe("The 'toBe' matcher compares", function() {
+  it("and has a positive case", function() {
+    expect(true).toBe(true)
+  })
+  it("and can have a negative case", function() {
+    expect(false).not.toBe(true)
+  })
+})
+
+
+describe("Included matchers:", function() {
+  it("The 'toBe' matcher compares with ==", function() {
+    local a = 12
+    local b = a
+
+    expect(a).toBe(b)
+    expect(a).not.toBe(null)
   })
 })
