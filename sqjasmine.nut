@@ -197,6 +197,41 @@ function expectException(expectedException, fn) {
 
 
 /*
+ * Test indentation levels in the spec verification output
+ */
+
+describe("The indentation level has a start value", function() {
+  expect(indent.level).toEqual(1)
+
+  it("then it increases for each it statement", function() {
+    expect(indent.level).toEqual(2)
+  })
+
+  it("and stays", function() {
+    expect(indent.level).toEqual(2)
+  })
+
+  it("unless the it statements are nested", function() {
+    expect(indent.level).toEqual(2)
+    it("then it has increased", function() {
+      expect(indent.level).toEqual(3)
+    })
+  })
+
+  it("then decreases", function() {
+    expect(indent.level).toEqual(2)
+  })
+
+  describe("nested describe statements will also increase indentation level", function() {
+    expect(indent.level).toEqual(2)
+    it("and of course their it statements do too", function() {
+      expect(indent.level).toEqual(3)
+    })
+  })
+})
+
+
+/*
  * Self-testing code based on the original Jasmine documentation
  */
 
