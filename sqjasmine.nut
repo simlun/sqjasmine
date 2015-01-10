@@ -138,16 +138,22 @@ class expect {
     }
   }
 
-  function toEqual(b) {
-    // TODO
-  }
-
   function _failedToBe(a, b) {
     throw "FAIL: expected " + a + " to be " + b
   }
 
   function _are(a, b) {
     return a == b
+  }
+
+  function toEqual(b) {
+    if (!_are(a, b)) {
+      _failedToEqual(a, b)
+    }
+  }
+
+  function _failedToEqual(a, b) {
+    throw "FAIL: expected " + a + " to equal " + b
   }
 }
 
@@ -164,6 +170,10 @@ class negatedExpect extends expect {
 
   function _are(a, b) {
     return a != b
+  }
+
+  function _failedToEqual(a, b) {
+    throw "FAIL: expected " + a + " not to equal " + b
   }
 }
 
@@ -191,8 +201,9 @@ function expectException(expectedException, fn) {
  */
 
 describe("A suite", function() {
-  it("contains spec with an expectation", function() {
+  it("contains spec with one or more expectations", function() {
     expect(true).toBe(true)
+    expect(false).toBe(false)
   })
 })
 
@@ -244,16 +255,23 @@ describe("Included matchers:", function() {
       expect(a).toEqual(12)
     })
 
-    it("should work for objects", function() {
-      local foo = {
-        a=12,
-        b=34
-      }
-      local bar = {
-        a=12,
-        b=34
-      }
-      expect(foo).toEqual(bar)
+    it("also works for negative testing simple literals and variables", function() {
+      local a = 12
+      expect(a).not.toEqual(4711)
+    })
+
+    expectException("FAIL: expected 12 to equal 4711", function() {
+      it("also can fail for simple literals and variables", function() {
+        local a = 12
+        expect(a).toEqual(4711)
+      })
+    })
+
+    expectException("FAIL: expected 17 not to equal 17", function() {
+      it("also can fail for negatively tested simple literals and variables", function() {
+        local a = 17
+        expect(a).not.toEqual(17)
+      })
     })
   })
 })
