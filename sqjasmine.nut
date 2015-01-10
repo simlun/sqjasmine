@@ -58,19 +58,68 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 println <- @(line) server.log(line)
 
 
+class Indentation {
+  level = null
+
+  constructor() {
+    level = 0
+  }
+
+  function increase() {
+    level += 1
+  }
+
+  function decrease() {
+    level -= 1
+  }
+
+  function getIndentation() {
+    local indentation = ""
+    for (local i = 0; i < level; i += 1) {
+      indentation += "  "
+    }
+    return indentation
+  }
+
+  function println(line) {
+    ::println(getIndentation() + line)
+  }
+}
+
+
+indent <- Indentation()
+
+
+function _tryFinally(_try, _finally) {
+  try {
+    _try()
+  } catch (e) {
+    _finally()
+    throw e
+  }
+  _finally()
+}
+
+
 /*
  * SqJasmine
  */
 
 function describe(title, suite) {
-  println(title)
-  suite()
+  indent.println(title)
+  indent.increase()
+  _tryFinally(suite, function() {
+    indent.decrease()
+  })
 }
 
 
 function it(title, spec) {
-  println("  " + title)
-  spec()
+  indent.println(title)
+  indent.increase()
+  _tryFinally(spec, function() {
+    indent.decrease()
+  })
 }
 
 
@@ -84,16 +133,20 @@ class expect {
   }
 
   function toBe(b) {
-    if (!_shouldPass(a, b)) {
-      _fail(a, b)
+    if (!_are(a, b)) {
+      _failedToBe(a, b)
     }
   }
 
-  function _fail(a, b) {
+  function toEqual(b) {
+    // TODO
+  }
+
+  function _failedToBe(a, b) {
     throw "FAIL: expected " + a + " to be " + b
   }
 
-  function _shouldPass(a, b) {
+  function _are(a, b) {
     return a == b
   }
 }
@@ -105,11 +158,11 @@ class negatedExpect extends expect {
     not = null // Not implemented, double negations are silly.
   }
 
-  function _fail(a, b) {
+  function _failedToBe(a, b) {
     throw "FAIL: expected " + a + " not to be " + b
   }
 
-  function _shouldPass(a, b) {
+  function _are(a, b) {
     return a != b
   }
 }
@@ -175,11 +228,32 @@ describe("The 'toBe' matcher compares", function() {
 
 
 describe("Included matchers:", function() {
+
   it("The 'toBe' matcher compares with ==", function() {
     local a = 12
     local b = a
 
     expect(a).toBe(b)
     expect(a).not.toBe(null)
+  })
+
+  describe("The 'toEqual' matcher", function() {
+
+    it("works for simple literals and variables", function() {
+      local a = 12
+      expect(a).toEqual(12)
+    })
+
+    it("should work for objects", function() {
+      local foo = {
+        a=12,
+        b=34
+      }
+      local bar = {
+        a=12,
+        b=34
+      }
+      expect(foo).toEqual(bar)
+    })
   })
 })
