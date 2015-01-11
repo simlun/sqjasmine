@@ -63,6 +63,13 @@ A spec
   can have more than one expectation
 ```
 
+Automatically running the tests on source code file save is an incredible productivity boost. Here's how it can be done using [entr][8] on a Mac:
+
+```
+$ brew install entr
+$ find . -name '*.nut' | entr -c sq documentation-specs.nut
+```
+
 
 [1]: http://www.squirrel-lang.org/
 [2]: http://jasmine.github.io/
@@ -71,3 +78,4 @@ A spec
 [5]: http://jasmine.github.io/2.1/introduction.html
 [6]: http://dannorth.net/introducing-bdd/
 [7]: https://ide.electricimp.com/
+[8]: http://entrproject.org/
