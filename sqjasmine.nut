@@ -101,6 +101,26 @@ function _tryFinally(_try, _finally) {
 }
 
 
+function _isTable(x) {
+  return typeof x == typeof {}
+}
+
+
+function _prettyFormat(x) {
+  if (_isTable(x)) {
+    local table = "(table : {"
+    local separator = ""
+    foreach (k, v in x) {
+      table += separator + k + "=" + _prettyFormat(v)
+      separator = ", "
+    }
+    return table + "})"
+  } else {
+    return "(" + typeof x + " : " + x + ")"
+  }
+}
+
+
 /*
  * SqJasmine
  */
@@ -113,6 +133,7 @@ function describe(title, suite) {
   })
 }
 
+// TODO Hm.. These two are kinda similar..!
 
 function it(title, spec) {
   indent.println(title)
@@ -121,6 +142,7 @@ function it(title, spec) {
     indent.decrease()
   })
 }
+
 
 
 class expect {
@@ -138,22 +160,45 @@ class expect {
     }
   }
 
-  function _failedToBe(a, b) {
-    throw "FAIL: expected " + a + " to be " + b
-  }
-
   function _are(a, b) {
     return a == b
   }
 
+  function _failedToBe(a, b) {
+    throw "FAIL: expected " + _prettyFormat(a) + " to be " + _prettyFormat(b)
+  }
+
   function toEqual(b) {
-    if (!_are(a, b)) {
+    if (!_equal(a, b)) {
       _failedToEqual(a, b)
     }
   }
 
+  function _areTablesEqual(a, b) {
+    if (a.len() == b.len()) {
+      foreach (key, value in a) {
+        if (!(key in b)) {
+          return false
+        } else if (!_equal(value, b[key])) {
+          return false
+        }
+      }
+      return true
+    } else {
+      return false
+    }
+  }
+
+  function _equal(a, b) {
+    if (_isTable(a) && _isTable(b)) {
+      return _areTablesEqual(a, b)
+    } else {
+      return _are(a, b)
+    }
+  }
+
   function _failedToEqual(a, b) {
-    throw "FAIL: expected " + a + " to equal " + b
+    throw "FAIL: expected " + _prettyFormat(a) + " to equal " + _prettyFormat(b)
   }
 }
 
@@ -165,15 +210,34 @@ class negatedExpect extends expect {
   }
 
   function _failedToBe(a, b) {
-    throw "FAIL: expected " + a + " not to be " + b
+    throw "FAIL: expected " + _prettyFormat(a) + " not to be " + _prettyFormat(b)
   }
 
   function _are(a, b) {
-    return a != b
+    return !base._are(a, b)
   }
 
   function _failedToEqual(a, b) {
-    throw "FAIL: expected " + a + " not to equal " + b
+    throw "FAIL: expected " + _prettyFormat(a) + " not to equal " + _prettyFormat(b)
+  }
+
+  function _areTablesEqual(a, b) {
+    // Return true if they are NOT equal
+    if (a.len() == b.len()) {
+      foreach (key, value in a) {
+        if (!(key in b)) {
+          return true
+        } else if (_equal(value, b[key])) {
+          // The _equal method is effectively already
+          // negated in this negatedExpect class
+          return true
+        } else {
+          return false
+        }
+      }
+    } else {
+      return true
+    }
   }
 }
 
@@ -230,6 +294,27 @@ describe("The indentation level has a start value", function() {
   })
 })
 
+/*
+ * Test pretty formatting
+ */
+
+describe("The pretty formatter", function() {
+  it("formats values and their type", function() {
+    expect(_prettyFormat(0)).toEqual("(integer : 0)")
+    expect(_prettyFormat("foo")).toEqual("(string : foo)")
+  })
+  it("formats tables", function() {
+    expect(_prettyFormat({})).toEqual("(table : {})")
+    expect(_prettyFormat({a=123})).toEqual("(table : {a=(integer : 123)})")
+  })
+  it("comma separates multiple slots in tables", function() {
+    expect(_prettyFormat({a=123, b="baz"})).toEqual("(table : {a=(integer : 123), b=(string : baz)})")
+  })
+  it("formats nested tables", function() {
+    expect(_prettyFormat({a=123, b={c=4711}})).toEqual("(table : {a=(integer : 123), b=(table : {c=(integer : 4711)})})")
+  })
+})
+
 
 /*
  * Self-testing code based on the original Jasmine documentation
@@ -243,7 +328,7 @@ describe("A suite", function() {
 })
 
 
-expectException("FAIL: expected true to be false", function() {
+expectException("FAIL: expected (bool : true) to be (bool : false)", function() {
   describe("A failing suite", function() {
     it("contains spec with a failing expectation", function() {
       expect(true).toBe(false)
@@ -284,28 +369,112 @@ describe("Included matchers:", function() {
   })
 
   describe("The 'toEqual' matcher", function() {
-
     it("works for simple literals and variables", function() {
       local a = 12
       expect(a).toEqual(12)
     })
 
-    it("also works for negative testing simple literals and variables", function() {
+    it("works for negative testing simple literals and variables", function() {
       local a = 12
       expect(a).not.toEqual(4711)
     })
 
-    expectException("FAIL: expected 12 to equal 4711", function() {
-      it("also can fail for simple literals and variables", function() {
+    expectException("FAIL: expected (integer : 12) to equal (integer : 4711)", function() {
+      it("can fail for simple literals and variables", function() {
         local a = 12
         expect(a).toEqual(4711)
       })
     })
 
-    expectException("FAIL: expected 17 not to equal 17", function() {
-      it("also can fail for negatively tested simple literals and variables", function() {
+    expectException("FAIL: expected (integer : 17) not to equal (integer : 17)", function() {
+      it("can fail for negatively tested simple literals and variables", function() {
         local a = 17
         expect(a).not.toEqual(17)
+      })
+    })
+
+    it("handles tables:", function() {
+      it("can be empty", function() {
+        expect({}).toEqual({})
+      })
+      expectException("FAIL: expected (table : {}) to equal (table : {a=(integer : 4711)})", function() {  
+        it("requires tables to be of the same sizes", function() {
+          expect({}).toEqual({a=4711})
+          expect({a=4711}).toEqual({})
+        })
+      })
+
+      it("needs to contain the same data", function() {
+        expect({a=4711}).toEqual({a=4711})
+      })
+
+      it("needs to contain the same keys", function() {
+        expectException("FAIL: expected (table : {a=(integer : 4711)}) to equal (table : {a2=(integer : 4711)})", function() {  
+          expect({a=4711}).toEqual({a2=4711})
+        })
+        expectException("FAIL: expected (table : {a2=(integer : 4711)}) to equal (table : {a=(integer : 4711)})", function() {  
+          expect({a2=4711}).toEqual({a=4711})
+        })
+      })
+
+      it("can be negated:", function() {
+        it("can detect different values of the same slot", function() {
+          expect({af=17}).not.toEqual({af=4711})
+          expect({bf=4711}).not.toEqual({bf=17})
+        })
+        it("can detect different number of slots", function() {
+          expect({a=17}).not.toEqual({})
+          expect({}).not.toEqual({a=17})
+          expect({}).not.toEqual({a=17, arst="foo"})
+        })
+        it("can detect same number of slots but with different keys", function() {
+          expect({az=4711}).not.toEqual({foo=4711})
+          expect({aq=4711}).not.toEqual({foo=17})
+        })
+      })
+
+      it("can contain more simple data", function() {
+        local foo = {
+          a=12,
+          b="foo"
+        }
+        local bar = {
+          a=12,
+          b="foo"
+        }
+        expect(foo).toEqual(bar)
+      })
+
+      it("can contain nested tables", function() {
+        it("can be equal", function() {
+          local foo = {
+            a=12,
+            b={c=4711}
+          }
+          local bar = {
+            a=12,
+            b={c=4711}
+          }
+          expect(foo).toEqual(bar)
+        })
+
+        it("can negatively test nested tables", function() {
+          local foo = {
+            a=12,
+            b={c=4711}
+          }
+          local bar = {
+            a=123456789,
+            b={c=4711}
+          }
+          expect(foo).not.toEqual(bar)
+        })
+
+        expectException("FAIL: expected (table : {}) to equal (table : {a=(table : {b=(integer : 4711)})})", function() {  
+          it("can fail for nested tables", function() {
+            expect({}).toEqual({a={b=4711}})
+          })
+        })
       })
     })
   })
