@@ -270,15 +270,23 @@ describe("Included matchers:", function() {
     })
   })
 
-/* TODO:
   it("The 'toMatch' matcher is for regular expressions", function() {
-    var message = "foo bar baz";
+    local message = "foo bar baz"
 
-    expect(message).toMatch(/bar/);
-    expect(message).toMatch("bar");
-    expect(message).not.toMatch(/quux/);
-  });
-*/
+    it("can match", function() {
+      expect(message).toMatch(@".*bar.*")
+    })
+
+    it("can negatively match", function() {
+      expect(message).not.toMatch(@"quux")
+    })
+
+    it("can fail to match", function() {
+      expectException("FAIL: expected (string : foo bar baz) to match the regex biz", function() {
+        expect(message).toMatch(@"biz")
+      })
+    })
+  })
 
 /* TODO:
   it("The 'toBeDefined' matcher compares against `undefined`", function() {

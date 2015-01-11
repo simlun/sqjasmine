@@ -223,6 +223,12 @@ class expect {
   function _failedToEqual(a, b) {
     throw "FAIL: expected " + _prettyFormat(a) + " to equal " + _prettyFormat(b)
   }
+
+  function toMatch(ex) {
+    if (regexp(ex).match(a) == false) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to match the regex " + ex
+    }
+  }
 }
 
 
@@ -260,6 +266,12 @@ class negatedExpect extends expect {
       }
     } else {
       return true
+    }
+  }
+
+  function toMatch(ex) {
+    if (regexp(ex).match(a) == true) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to match the regex " + ex
     }
   }
 }
