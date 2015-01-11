@@ -59,8 +59,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * Helper Source Code
  ******************************************************************************/
 
-// Use Electric Imp's logging
-println <- @(line) server.log(line)
+if ("imp" in getroottable()) {
+  // Use Electric Imp's logging
+  println <- @(line) server.log(line)
+} else {
+  println <- @(line) ::print(line + "\n")
+}
 
 
 class Indentation {
