@@ -8,6 +8,8 @@ SqJasmine is a [Behavior-Driven Development][6] testing framework for [Squirrel]
 
 This is a partial [Squirrel][1] port of [Jasmine][2] by [Simon Lundmark][3] written for behavior-driven development on the [Electric Imp][4] platform.
 
+![Build status of master branch](https://travis-ci.org/simlun/sqjasmine.svg?branch=master)
+
 
 Documentation
 -------------
