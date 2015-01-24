@@ -13,9 +13,9 @@ $(SQ):
 
 .PHONY: test
 test: $(SQ)
-	$(SQ) helper-specs.nut
-	$(SQ) documentation-specs.nut
+	($(SQ) helper-specs.nut | tee .testoutput) && bash -c "grep 'All tests succeeded' <(tail -n 1 .testoutput)"
+	($(SQ) documentation-specs.nut | tee .testoutput) && bash -c "grep 'All tests succeeded' <(tail -n 1 .testoutput)"
 
 .PHONY: clean
 clean:
-	rm -rf .SQUIRREL3 .squirrel.tar.gz
+	rm -rf .SQUIRREL3 .squirrel.tar.gz .testoutput

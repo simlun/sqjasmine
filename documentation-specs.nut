@@ -449,3 +449,5 @@ describe("A spec", function() {
     expect(true).toEqual(true)
   })
 })
+
+println("All tests succeeded")

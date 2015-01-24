@@ -5,3 +5,5 @@
 # Squirrel
 .squirrel.tar.gz
 .SQUIRREL3
+
+.testoutput

@@ -118,3 +118,5 @@ describe("The pretty formatter", function() {
     expect(_prettyFormat([123, "baz"])).toEqual("(array : [(integer : 123), (string : baz)])")
   })
 })
+
+println("All tests succeeded")
