@@ -110,4 +110,11 @@ describe("The pretty formatter", function() {
   it("formats nested tables", function() {
     expect(_prettyFormat({a=123, b={c=4711}})).toEqual("(table : {a=(integer : 123), b=(table : {c=(integer : 4711)})})")
   })
+  it("formats arrays", function() {
+    expect(_prettyFormat([])).toEqual("(array : [])")
+    expect(_prettyFormat([123])).toEqual("(array : [(integer : 123)])")
+  })
+  it("comma separates multiple elements in arrays", function() {
+    expect(_prettyFormat([123, "baz"])).toEqual("(array : [(integer : 123), (string : baz)])")
+  })
 })

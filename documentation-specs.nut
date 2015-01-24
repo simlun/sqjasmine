@@ -347,14 +347,21 @@ it("The 'toBeFalsy' matcher is for boolean casting testing", function() {
   })
 })
 
-/* TODO:
-  it("The 'toContain' matcher is for finding an item in an Array", function() {
-    var a = ["foo", "bar", "baz"];
+it("The 'toContain' matcher is for finding an item in an Array", function() {
+  local a = ["foo", "bar", "baz"]
 
-    expect(a).toContain("bar");
-    expect(a).not.toContain("quux");
-  });
-*/
+  expect(a).toContain("bar")
+  expect(a).not.toContain("quux")
+
+  it("can fail", function() {
+    expectException("FAIL: expected (array : [(string : foo), (string : bar), (string : baz)]) to contain (string : quux)", function() {
+      expect(a).toContain("quux")
+    })
+    expectException("FAIL: expected (array : [(string : foo), (string : bar), (string : baz)]) not to contain (string : foo)", function() {
+      expect(a).not.toContain("foo")
+    })
+  })
+})
 
 /* TODO:
   it("The 'toBeLessThan' matcher is for mathematical comparisons", function() {

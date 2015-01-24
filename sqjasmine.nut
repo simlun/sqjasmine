@@ -116,6 +116,11 @@ function _isTable(x) {
 }
 
 
+function _isArray(x) {
+  return typeof x == typeof []
+}
+
+
 function _prettyFormat(x) {
   if (_isTable(x)) {
     local table = "(table : {"
@@ -125,6 +130,14 @@ function _prettyFormat(x) {
       separator = ", "
     }
     return table + "})"
+  } else if (_isArray(x)) {
+    local array = "(array : ["
+    local separator = ""
+    foreach (e in x) {
+      array += separator + _prettyFormat(e)
+      separator = ", "
+    }
+    return array + "])"
   } else if (x == null) {
     return "(null)"
   } else {
@@ -250,6 +263,12 @@ class expect {
       throw "FAIL: expected " + _prettyFormat(a) + " to be falsy"
     }
   }
+
+  function toContain(b) {
+    if (a.find(b) == null) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to contain " + _prettyFormat(b)
+    }
+  }
 }
 
 
@@ -311,6 +330,12 @@ class negatedExpect extends expect {
   function toBeFalsy() {
     if (!a) {
       throw "FAIL: expected " + _prettyFormat(a) + " not to be falsy"
+    }
+  }
+
+  function toContain(b) {
+    if (a.find(b) != null) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to contain " + _prettyFormat(b)
     }
   }
 }
