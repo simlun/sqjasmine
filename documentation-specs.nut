@@ -311,16 +311,23 @@ describe("Included matchers:", function() {
   });
 */
 
-/* TODO:
-  it("The 'toBeNull' matcher compares against null", function() {
-    var a = null;
-    var foo = "foo";
+it("The 'toBeNull' matcher compares against null", function() {
+  local a = null
+  local foo = "foo"
 
-    expect(null).toBeNull();
-    expect(a).toBeNull();
-    expect(foo).not.toBeNull();
-  });
-*/
+  expect(null).toBeNull()
+  expect(a).toBeNull()
+  expect(foo).not.toBeNull()
+
+  it("can fail", function() {
+    expectException("FAIL: expected (string : foo) to be null", function() {
+      expect(foo).toBeNull()
+    })
+    expectException("FAIL: expected (null) not to be null", function() {
+      expect(null).not.toBeNull()
+    })
+  })
+})
 
 /* TODO:
   it("The 'toBeTruthy' matcher is for boolean casting testing", function() {

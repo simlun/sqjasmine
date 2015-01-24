@@ -97,6 +97,9 @@ describe("The pretty formatter", function() {
     expect(_prettyFormat(0)).toEqual("(integer : 0)")
     expect(_prettyFormat("foo")).toEqual("(string : foo)")
   })
+  it("formats null", function() {
+    expect(_prettyFormat(null)).toEqual("(null)")
+  })
   it("formats tables", function() {
     expect(_prettyFormat({})).toEqual("(table : {})")
     expect(_prettyFormat({a=123})).toEqual("(table : {a=(integer : 123)})")

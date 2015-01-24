@@ -125,6 +125,8 @@ function _prettyFormat(x) {
       separator = ", "
     }
     return table + "})"
+  } else if (x == null) {
+    return "(null)"
   } else {
     return "(" + typeof x + " : " + x + ")"
   }
@@ -230,6 +232,12 @@ class expect {
       throw "FAIL: expected " + _prettyFormat(a) + " to match the regex " + ex
     }
   }
+
+  function toBeNull() {
+    if (a != null) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to be null"
+    }
+  }
 }
 
 
@@ -273,6 +281,12 @@ class negatedExpect extends expect {
   function toMatch(ex) {
     if (regexp(ex).match(a) == true) {
       throw "FAIL: expected " + _prettyFormat(a) + " not to match the regex " + ex
+    }
+  }
+
+  function toBeNull() {
+    if (a == null) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to be null"
     }
   }
 }
