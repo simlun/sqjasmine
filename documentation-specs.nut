@@ -90,9 +90,9 @@ describe("A suite", function() {
   })
 })
 
-expectException("FAIL: expected (bool : true) to be (bool : false)", function() {
-  describe("A failing suite", function() {
-    it("contains spec with a failing expectation", function() {
+describe("A failing suite", function() {
+  it("contains spec with a failing expectation", function() {
+    expectException("FAIL: expected (bool : true) to be (bool : false)", function() {
       expect(true).toBe(false)
     })
   })
@@ -171,15 +171,15 @@ describe("Included matchers:", function() {
       expect(a).not.toEqual(4711)
     })
 
-    expectException("FAIL: expected (integer : 12) to equal (integer : 4711)", function() {
-      it("can fail for simple literals and variables", function() {
+    it("can fail for simple literals and variables", function() {
+      expectException("FAIL: expected (integer : 12) to equal (integer : 4711)", function() {
         local a = 12
         expect(a).toEqual(4711)
       })
     })
 
-    expectException("FAIL: expected (integer : 17) not to equal (integer : 17)", function() {
-      it("can fail for negatively tested simple literals and variables", function() {
+    it("can fail for negatively tested simple literals and variables", function() {
+      expectException("FAIL: expected (integer : 17) not to equal (integer : 17)", function() {
         local a = 17
         expect(a).not.toEqual(17)
       })
@@ -189,8 +189,8 @@ describe("Included matchers:", function() {
       it("can be empty", function() {
         expect({}).toEqual({})
       })
-      expectException("FAIL: expected (table : {}) to equal (table : {a=(integer : 4711)})", function() {
-        it("requires tables to be of the same sizes", function() {
+      it("requires tables to be of the same sizes", function() {
+        expectException("FAIL: expected (table : {}) to equal (table : {a=(integer : 4711)})", function() {
           expect({}).toEqual({a=4711})
           expect({a=4711}).toEqual({})
         })
@@ -262,8 +262,8 @@ describe("Included matchers:", function() {
           expect(foo).not.toEqual(bar)
         })
 
-        expectException("FAIL: expected (table : {}) to equal (table : {a=(table : {b=(integer : 4711)})})", function() {
-          it("can fail for nested tables", function() {
+        it("can fail for nested tables", function() {
+          expectException("FAIL: expected (table : {}) to equal (table : {a=(table : {b=(integer : 4711)})})", function() {
             expect({}).toEqual({a={b=4711}})
           })
         })
