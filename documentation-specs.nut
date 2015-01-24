@@ -389,7 +389,7 @@ it("The 'toBeGreaterThan' matcher is for mathematical comparisons", function() {
 
   it("can fail", function() {
     expectException("FAIL: expected (integer : 0) to be greater than (float : 3.14159)", function() {
-      expect(0).toBeGreaterThan(pi)
+      expect(4).toBeGreaterThan(pi)
     })
     expectException("FAIL: expected (integer : 4711) not to be greater than (float : 2.78)", function() {
       expect(4711).not.toBeGreaterThan(e)
