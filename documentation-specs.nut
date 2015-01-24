@@ -289,28 +289,6 @@ describe("Included matchers:", function() {
     })
   })
 
-/* TODO:
-  it("The 'toBeDefined' matcher compares against `undefined`", function() {
-    var a = {
-      foo: "foo"
-    };
-
-    expect(a.foo).toBeDefined();
-    expect(a.bar).not.toBeDefined();
-  });
-*/
-
-/* TODO:
-  it("The `toBeUndefined` matcher compares against `undefined`", function() {
-    var a = {
-      foo: "foo"
-    };
-
-    expect(a.foo).not.toBeUndefined();
-    expect(a.bar).toBeUndefined();
-  });
-*/
-
 it("The 'toBeNull' matcher compares against null", function() {
   local a = null
   local foo = "foo"
