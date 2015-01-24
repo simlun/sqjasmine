@@ -363,15 +363,22 @@ it("The 'toContain' matcher is for finding an item in an Array", function() {
   })
 })
 
-/* TODO:
-  it("The 'toBeLessThan' matcher is for mathematical comparisons", function() {
-    var pi = 3.1415926,
-      e = 2.78;
+it("The 'toBeLessThan' matcher is for mathematical comparisons", function() {
+  local pi = 3.1415926
+  local e = 2.78
 
-    expect(e).toBeLessThan(pi);
-    expect(pi).not.toBeLessThan(e);
-  });
-*/
+  expect(e).toBeLessThan(pi)
+  expect(pi).not.toBeLessThan(e)
+
+  it("can fail", function() {
+    expectException("FAIL: expected (integer : 4711) to be less than (float : 3.14159)", function() {
+      expect(4711).toBeLessThan(pi)
+    })
+    expectException("FAIL: expected (integer : 0) not to be less than (float : 2.78)", function() {
+      expect(0).not.toBeLessThan(e)
+    })
+  })
+})
 
 /* TODO:
   it("The 'toBeGreaterThan' matcher is for mathematical comparisons", function() {

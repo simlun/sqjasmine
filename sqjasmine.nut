@@ -269,6 +269,12 @@ class expect {
       throw "FAIL: expected " + _prettyFormat(a) + " to contain " + _prettyFormat(b)
     }
   }
+
+  function toBeLessThan(b) {
+    if (!(a < b)) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to be less than " + _prettyFormat(b)
+    }
+  }
 }
 
 
@@ -336,6 +342,12 @@ class negatedExpect extends expect {
   function toContain(b) {
     if (a.find(b) != null) {
       throw "FAIL: expected " + _prettyFormat(a) + " not to contain " + _prettyFormat(b)
+    }
+  }
+
+  function toBeLessThan(b) {
+    if (a < b) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to be less than " + _prettyFormat(b)
     }
   }
 }
