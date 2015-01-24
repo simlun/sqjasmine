@@ -329,23 +329,45 @@ it("The 'toBeNull' matcher compares against null", function() {
   })
 })
 
-/* TODO:
-  it("The 'toBeTruthy' matcher is for boolean casting testing", function() {
-    var a, foo = "foo";
+it("The 'toBeTruthy' matcher is for boolean casting testing", function() {
+  local a = null
+  local foo = "foo"
 
-    expect(foo).toBeTruthy();
-    expect(a).not.toBeTruthy();
-  });
-*/
+  expect(true).toBeTruthy()
+  expect(foo).toBeTruthy()
+  expect("").toBeTruthy()
+  expect(17).toBeTruthy()
+  expect(0).not.toBeTruthy()
+  expect(-15).toBeTruthy()
+  expect(false).not.toBeTruthy()
+  expect(a).not.toBeTruthy()
 
-/* TODO:
-  it("The 'toBeFalsy' matcher is for boolean casting testing", function() {
-    var a, foo = "foo";
+  it("can fail", function() {
+    expectException("FAIL: expected (bool : false) to be truthy", function() {
+      expect(false).toBeTruthy()
+    })
+    expectException("FAIL: expected (bool : true) not to be truthy", function() {
+      expect(true).not.toBeTruthy()
+    })
+  })
+})
 
-    expect(a).toBeFalsy();
-    expect(foo).not.toBeFalsy();
-  });
-*/
+it("The 'toBeFalsy' matcher is for boolean casting testing", function() {
+  local a = null
+  local foo = "foo"
+
+  expect(a).toBeFalsy()
+  expect(foo).not.toBeFalsy()
+
+  it("can fail", function() {
+    expectException("FAIL: expected (bool : true) to be falsy", function() {
+      expect(true).toBeFalsy()
+    })
+    expectException("FAIL: expected (bool : false) not to be falsy", function() {
+      expect(false).not.toBeFalsy()
+    })
+  })
+})
 
 /* TODO:
   it("The 'toContain' matcher is for finding an item in an Array", function() {

@@ -238,6 +238,18 @@ class expect {
       throw "FAIL: expected " + _prettyFormat(a) + " to be null"
     }
   }
+
+  function toBeTruthy() {
+    if (!a) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to be truthy"
+    }
+  }
+
+  function toBeFalsy() {
+    if (a) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to be falsy"
+    }
+  }
 }
 
 
@@ -287,6 +299,18 @@ class negatedExpect extends expect {
   function toBeNull() {
     if (a == null) {
       throw "FAIL: expected " + _prettyFormat(a) + " not to be null"
+    }
+  }
+
+  function toBeTruthy() {
+    if (a) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to be truthy"
+    }
+  }
+
+  function toBeFalsy() {
+    if (!a) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to be falsy"
     }
   }
 }
