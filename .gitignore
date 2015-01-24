@@ -1,0 +1,7 @@
+# Vim
+.*.sw[a-z]
+.sw[a-z]
+
+# Squirrel
+.squirrel.tar.gz
+.SQUIRREL3
