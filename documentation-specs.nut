@@ -380,15 +380,22 @@ it("The 'toBeLessThan' matcher is for mathematical comparisons", function() {
   })
 })
 
-/* TODO:
-  it("The 'toBeGreaterThan' matcher is for mathematical comparisons", function() {
-    var pi = 3.1415926,
-      e = 2.78;
+it("The 'toBeGreaterThan' matcher is for mathematical comparisons", function() {
+  local pi = 3.1415926
+  local e = 2.78
 
-    expect(pi).toBeGreaterThan(e);
-    expect(e).not.toBeGreaterThan(pi);
-  });
-*/
+  expect(pi).toBeGreaterThan(e)
+  expect(e).not.toBeGreaterThan(pi)
+
+  it("can fail", function() {
+    expectException("FAIL: expected (integer : 0) to be greater than (float : 3.14159)", function() {
+      expect(0).toBeGreaterThan(pi)
+    })
+    expectException("FAIL: expected (integer : 4711) not to be greater than (float : 2.78)", function() {
+      expect(4711).not.toBeGreaterThan(e)
+    })
+  })
+})
 
 /*  TODO:
   it("The 'toBeCloseTo' matcher is for precision math comparison", function() {

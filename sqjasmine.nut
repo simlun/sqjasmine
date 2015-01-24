@@ -275,6 +275,12 @@ class expect {
       throw "FAIL: expected " + _prettyFormat(a) + " to be less than " + _prettyFormat(b)
     }
   }
+
+  function toBeGreaterThan(b) {
+    if (!(a > b)) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to be greater than " + _prettyFormat(b)
+    }
+  }
 }
 
 
@@ -348,6 +354,12 @@ class negatedExpect extends expect {
   function toBeLessThan(b) {
     if (a < b) {
       throw "FAIL: expected " + _prettyFormat(a) + " not to be less than " + _prettyFormat(b)
+    }
+  }
+
+  function toBeGreaterThan(b) {
+    if (a > b) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to be greater than " + _prettyFormat(b)
     }
   }
 }
