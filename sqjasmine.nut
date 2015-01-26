@@ -141,7 +141,11 @@ function _prettyFormat(x) {
   } else if (x == null) {
     return "(null)"
   } else {
-    return "(" + typeof x + " : " + x + ")"
+    if (typeof x == typeof 1.2)
+      return "(" + typeof x + " : " + format("%f", x) + ")"
+    else
+      return "(" + typeof x + " : " + x + ")"
+
   }
 }
 
@@ -157,6 +161,55 @@ function expectException(expectedException, fn) {
     }
   }
   throw "Expected an exception to have been thrown"
+}
+
+
+function sgn(x) {
+  if (x < 0)
+    return -1
+  else if (x == 0)
+    return 0
+  else
+    return 1
+}
+
+
+function floatAbs(x) {
+  if (sgn(x) == -1)
+    return -1.0 * x
+  else if (sgn(x) == 0)
+    return 0.0
+  else
+    return 1.0 * x
+}
+
+
+function round(x, decimalPlaces) {
+  // Take the input number apart
+  local sign = sgn(x)
+  local absWhole = abs(x.tointeger())
+  local absFraction = floatAbs(x) - absWhole
+
+  // Throw away the useless digits of the fraction
+  local usefulDecimalPlaces = decimalPlaces + 1
+  local usefulFractionAsAWhole = floor(absFraction * pow(10, usefulDecimalPlaces))
+
+  // Convert fraction part to integer
+  local fractionAsInteger = floor(absFraction * pow(10, decimalPlaces))
+
+  // Get last useful fraction digit
+  local tieBreaker = usefulFractionAsAWhole - (floor(usefulFractionAsAWhole / 10) * 10)
+
+  // Perhaps "round up"
+  if (tieBreaker >= 5)
+    fractionAsInteger = fractionAsInteger + 1
+
+  // Convert back into fraction
+  local roundedFraction = fractionAsInteger / pow(10, decimalPlaces)
+
+  // Combine parts into a result
+  local result = sign * (absWhole + roundedFraction)
+  return result
 }
 
 

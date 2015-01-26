@@ -119,4 +119,59 @@ describe("The pretty formatter", function() {
   })
 })
 
+
+describe("The floatAbs function", function() {
+  it("calculates the absolute value of floating points numbers", function() {
+    expect(floatAbs(-17.4711)).toEqual(17.4711)
+    expect(floatAbs(0.0)).toEqual(0.0)
+    expect(floatAbs(17.1234)).toEqual(17.1234)
+  })
+})
+
+
+describe("The round function", function() {
+  it("rounds to 0 decimal points", function() {
+    expect(round(0.0, 0)).toEqual(0)
+    expect(round(17.0, 0)).toEqual(17)
+    expect(round(17.0, 0)).toEqual(17)
+    expect(round(-4711.0, 0)).toEqual(-4711)
+  })
+  it("rounds arbitrary fractions", function() {
+    expect(round(17.4712, 0)).toEqual(17)
+    expect(round(17.4712, 1)).toEqual(17.5)
+    expect(round(17.4712, 2)).toEqual(17.47)
+    expect(round(17.4712, 3)).toEqual(17.471)
+    it("has a limit to what precision it can handle", function() {
+      expectException("FAIL: expected (float : 17.471199) to equal (float : 17.471201)", function() {
+        expect(round(17.4712, 4)).toEqual(17.4712)
+      })
+    })
+  })
+  it("can provide unexpected results because floats, well.. are just floats", function() {
+    expect(round(1.0, 1)).toEqual(1.0)
+    expect(round(1.1, 1)).toEqual(1.1)
+    expect(round(1.5, 1)).toEqual(1.5)
+    expect(round(1.9, 1)).toEqual(1.9)
+    expect(round(1.09, 2)).toEqual(1.09)
+    expect(round(1.19, 2)).toEqual(1.19)
+    it("is floatey. And that's why we have the toBeCloseTo matcher!", function() {
+      expectException("FAIL: expected (float : 1.590000) to equal (float : 1.590000)", function() {
+        expect(round(1.590, 2)).toEqual(1.59)
+      })
+    })
+  })
+  it("rounds down small fractions", function() {
+    expect(round(17.1, 0)).toEqual(17)
+    expect(round(-17.1, 0)).toEqual(-17)
+  })
+  it("rounds up large fractions", function() {
+    expect(round(17.9, 0)).toEqual(18)
+    expect(round(-17.9, 0)).toEqual(-18)
+  })
+  it("rounds half away from zero", function() {
+    expect(round(4711.5, 0)).toEqual(4712)
+    expect(round(-4711.5, 0)).toEqual(-4712)
+  })
+})
+
 println("All tests succeeded")
