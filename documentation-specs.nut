@@ -364,34 +364,34 @@ it("The 'toContain' matcher is for finding an item in an Array", function() {
 })
 
 it("The 'toBeLessThan' matcher is for mathematical comparisons", function() {
-  local pi = 3.1415926
-  local e = 2.78
+  local pi = 3.140000
+  local e = 2.780000
 
   expect(e).toBeLessThan(pi)
   expect(pi).not.toBeLessThan(e)
 
   it("can fail", function() {
-    expectException("FAIL: expected (integer : 4711) to be less than (float : 3.14159)", function() {
+    expectException("FAIL: expected (integer : 4711) to be less than (float : 3.140000)", function() {
       expect(4711).toBeLessThan(pi)
     })
-    expectException("FAIL: expected (integer : 0) not to be less than (float : 2.78)", function() {
+    expectException("FAIL: expected (integer : 0) not to be less than (float : 2.780000)", function() {
       expect(0).not.toBeLessThan(e)
     })
   })
 })
 
 it("The 'toBeGreaterThan' matcher is for mathematical comparisons", function() {
-  local pi = 3.1415926
-  local e = 2.78
+  local pi = 3.140000
+  local e = 2.780000
 
   expect(pi).toBeGreaterThan(e)
   expect(e).not.toBeGreaterThan(pi)
 
   it("can fail", function() {
-    expectException("FAIL: expected (integer : 0) to be greater than (float : 3.14159)", function() {
+    expectException("FAIL: expected (integer : 0) to be greater than (float : 3.140000)", function() {
       expect(0).toBeGreaterThan(pi)
     })
-    expectException("FAIL: expected (integer : 4711) not to be greater than (float : 2.78)", function() {
+    expectException("FAIL: expected (integer : 4711) not to be greater than (float : 2.780000)", function() {
       expect(4711).not.toBeGreaterThan(e)
     })
   })
@@ -399,7 +399,7 @@ it("The 'toBeGreaterThan' matcher is for mathematical comparisons", function() {
 
 /*  TODO:
   it("The 'toBeCloseTo' matcher is for precision math comparison", function() {
-    var pi = 3.1415926,
+    var pi = 3.140000,
       e = 2.78;
 
     expect(pi).not.toBeCloseTo(e, 2);

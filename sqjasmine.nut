@@ -157,7 +157,7 @@ function expectException(expectedException, fn) {
     if (e == expectedException) {
       return
     } else {
-      throw "Expected this exception: " + expectedException + " but caught: " + e
+      throw "Expected this exception:\n" + expectedException + "\nbut caught:\n" + e
     }
   }
   throw "Expected an exception to have been thrown"
