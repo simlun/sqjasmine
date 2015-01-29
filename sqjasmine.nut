@@ -334,6 +334,14 @@ class expect {
       throw "FAIL: expected " + _prettyFormat(a) + " to be greater than " + _prettyFormat(b)
     }
   }
+
+  function toBeCloseTo(b, decimalPlaces) {
+    local aRounded = round(a, decimalPlaces)
+    local bRounded = round(b, decimalPlaces)
+    if (_prettyFormat(aRounded) != _prettyFormat(bRounded)) {
+      throw "FAIL: expected " + _prettyFormat(a) + " to be close to " + _prettyFormat(b) + " within " + decimalPlaces + " decimal places"
+    }
+  }
 }
 
 
@@ -413,6 +421,14 @@ class negatedExpect extends expect {
   function toBeGreaterThan(b) {
     if (a > b) {
       throw "FAIL: expected " + _prettyFormat(a) + " not to be greater than " + _prettyFormat(b)
+    }
+  }
+
+  function toBeCloseTo(b, decimalPlaces) {
+    local aRounded = round(a, decimalPlaces)
+    local bRounded = round(b, decimalPlaces)
+    if (_prettyFormat(aRounded) == _prettyFormat(bRounded)) {
+      throw "FAIL: expected " + _prettyFormat(a) + " not to be close to " + _prettyFormat(b) + " within 0 decimal places"
     }
   }
 }

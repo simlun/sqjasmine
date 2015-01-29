@@ -397,15 +397,23 @@ it("The 'toBeGreaterThan' matcher is for mathematical comparisons", function() {
   })
 })
 
-/*  TODO:
-  it("The 'toBeCloseTo' matcher is for precision math comparison", function() {
-    var pi = 3.140000,
-      e = 2.78;
+it("The 'toBeCloseTo' matcher is for precision math comparison", function() {
+  local pi = 3.140000
+  local e = 2.780000
 
-    expect(pi).not.toBeCloseTo(e, 2);
-    expect(pi).toBeCloseTo(e, 0);
-  });
-*/
+  expect(pi).toBeCloseTo(e, 0)
+  expect(pi).not.toBeCloseTo(e, 1)
+  expect(pi).not.toBeCloseTo(e, 2)
+
+  it("can fail", function() {
+    expectException("FAIL: expected (float : 3.140000) to be close to (float : 2.780000) within 1 decimal places", function() {
+      expect(pi).toBeCloseTo(e, 1)
+    })
+    expectException("FAIL: expected (float : 3.140000) not to be close to (float : 2.780000) within 0 decimal places", function() {
+      expect(pi).not.toBeCloseTo(e, 0)
+    })
+  })
+})
 
 /* TODO:
   it("The 'toThrow' matcher is for testing if a function throws an exception", function() {
