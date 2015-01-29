@@ -69,7 +69,7 @@ Automatically running the tests on source code file save is an incredible produc
 
 ```
 $ brew install entr
-$ find . -name '*.nut' | entr -c sq documentation-specs.nut
+$ find . -name '*.nut' | entr -c bash -c 'sq helper-specs.nut && sq documentation-specs.nut'
 ```
 
 
