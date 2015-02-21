@@ -1,0 +1,2 @@
+#!/bin/bash -e
+find . -name '*.nut' | entr -c bash -e -c "for spec in *-specs.nut; do sq \${spec}; done"
