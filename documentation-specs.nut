@@ -185,6 +185,31 @@ describe("Included matchers:", function() {
       })
     })
 
+    it("handles arrays:", function() {
+      it("can be empty", function() {
+        expect([]).toEqual([])
+      })
+      it("requires arrays to be of the same sizes", function() {
+        expectException("FAIL: expected (array : []) to equal (array : [(integer : 4711)])", function() {
+          expect([]).toEqual([4711])
+          expect([4711]).toEqual([])
+        })
+      })
+
+      it("needs to contain the same data", function() {
+        expect([4711, 17]).toEqual([4711, 17])
+      })
+
+      it("can be negated:", function() {
+        expect([]).not.toEqual([17])
+        expect([17]).not.toEqual([4711])
+        expect([4711]).not.toEqual([17])
+        expectException("FAIL: expected (array : [(integer : 4711)]) not to equal (array : [(integer : 4711)])", function() {
+          expect([4711]).not.toEqual([4711])
+        })
+      })
+    })
+
     it("handles tables:", function() {
       it("can be empty", function() {
         expect({}).toEqual({})

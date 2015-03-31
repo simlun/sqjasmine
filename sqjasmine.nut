@@ -266,6 +266,19 @@ class expect {
     }
   }
 
+  function _areArraysEqual(a, b) {
+    if (a.len() == b.len()) {
+      foreach (i, value in a) {
+        if (!_equal(value, b[i])) {
+          return false
+        }
+      }
+      return true
+    } else {
+      return false
+    }
+  }
+
   function _areTablesEqual(a, b) {
     if (a.len() == b.len()) {
       foreach (key, value in a) {
@@ -282,7 +295,9 @@ class expect {
   }
 
   function _equal(a, b) {
-    if (_isTable(a) && _isTable(b)) {
+    if (_isArray(a) && _isArray(b)) {
+      return _areArraysEqual(a, b)
+    } else if (_isTable(a) && _isTable(b)) {
       return _areTablesEqual(a, b)
     } else {
       return _are(a, b)
@@ -361,6 +376,20 @@ class negatedExpect extends expect {
 
   function _failedToEqual(a, b) {
     throw "FAIL: expected " + _prettyFormat(a) + " not to equal " + _prettyFormat(b)
+  }
+
+  function _areArraysEqual(a, b) {
+    // Return true if they are NOT equal
+    if (a.len() != b.len()) {
+      return true
+    } else {
+      foreach (i, value in a) {
+        if (_equal(value, b[i])) {
+          return true
+        }
+        return false
+      }
+    }
   }
 
   function _areTablesEqual(a, b) {
